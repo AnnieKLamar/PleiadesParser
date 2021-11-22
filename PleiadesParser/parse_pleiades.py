@@ -49,6 +49,9 @@ import shutil
 import os
 
 class PleiadesGetter:
+    
+    def __init__(self):
+        pass
 
     def wget_url (url):
         """
