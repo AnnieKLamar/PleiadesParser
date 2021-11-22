@@ -2,19 +2,16 @@ from distutils.core import setup
 setup(
   name = 'PleiadesParser',
   packages = ['PleiadesParser'],
-  version = '1.3',
+  version = '1.4',
   license='MIT',
   description = 'Downloads most recent data from Pleiades and parses data in to Python objects.',
   author = 'Annie K. Lamar',
   author_email = 'kalamar@stanford.edu',
   url = 'https://github.com/AnnieKLamar/PleiadesParser',
-  download_url = 'https://github.com/AnnieKLamar/PleiadesParser/archive/refs/tags/v1.3.tar.gz',
+  download_url = 'https://github.com/AnnieKLamar/PleiadesParser/archive/refs/tags/v1.4.tar.gz',
   keywords = ['Pleiades', 'JSON', 'Stoa'],
   install_requires=[ 
-          'wget',
-          'gzip',
-          'shutil',
-          'os'
+          'wget'
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',
