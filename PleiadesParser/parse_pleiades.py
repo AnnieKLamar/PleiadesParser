@@ -6,7 +6,6 @@ Version: 1.0 11/21/21
 Credits: https://pleiades.stoa.org/ 
 
 Quick Start:
-    Make PleiadesGetter
     Run get_pleiades_data()
     Store results in list.
     
@@ -19,7 +18,6 @@ which contains most commonly used attributes, run:
 By default, this method returns Pleiad objects.
 
 Classes:
-    PleiadesGetter
     PleiadesObject
     class BboxContainer
     class GeometryContainer
@@ -48,129 +46,129 @@ import gzip
 import shutil
 import os
 
-class PleiadesGetter:
-    
-    def __init__(self):
-        pass
 
-    def wget_url (self, url):
-        """
-        Downloads the file at the given URL and returns the file name.
+def wget_url(url):
+    """
+    Downloads the file at the given URL and returns the file name.
 
-        Keyword arguments:
-        url -- the URL from which to download the file (required)
+    Keyword arguments:
+    url -- the URL from which to download the file (required)
 
-        Returns:
-        (string) file name of downloaded file
-        """
-        wget.download(url, url.split("/")[-1])
-        return url.split("/")[-1]
+    Returns:
+    (string) file name of downloaded file
+    """
+    wget.download(url, url.split("/")[-1])
+    return url.split("/")[-1]
 
-    def unzip_gz (self, file):
-        """
-        Unzips the provided .gz file and returns the unzipped file.
 
-        Keyword arguments:
-        file -- the .gz file (required)
+def unzip_gz(file):
+    """
+    Unzips the provided .gz file and returns the unzipped file.
 
-        Returns:
-        (string) file name of unzipped file
-        """
-        new_name = file[:-3]
-        with gzip.open(file, 'rb') as f_in:
-            with open(new_name, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-        f_in.close(); os.remove(file)
-        f_out.close(); return file[:-3]
+    Keyword arguments:
+    file -- the .gz file (required)
 
-    def get_file (self, url):
-        """
-        Downloads, unzips, and returns the file at the given URL.
+    Returns:
+    (string) file name of unzipped file
+    """
+    new_name = file[:-3]
+    with gzip.open(file, 'rb') as f_in:
+        with open(new_name, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+    f_in.close(); os.remove(file)
+    f_out.close(); return file[:-3]
 
-        Keyword arguments:
-        url -- the URL from which to access the data (required)
 
-        Returns:
-        (string) file name
-        """
-        file = self.wget_url(url)
-        if file.endswith(".gz"):
-            file = self.unzip_gz(file)
-        return file
+def get_file(url):
+    """
+    Downloads, unzips, and returns the file at the given URL.
 
-    def get_df (self, json_file):
-        """
-        Opens the provided JSON file and loads it into a dataframe.
+    Keyword arguments:
+    url -- the URL from which to access the data (required)
 
-        Keyword arguments:
-        json_file -- string name of JSON file with data to be loaded
+    Returns:
+    (string) file name
+    """
+    file = wget_url(url)
+    if file.endswith(".gz"):
+        file = unzip_gz(file)
+    return file
 
-        Returns:
-        (list) dataset as list of dictionaries
-        """
-        json_file = open(json_file, "r+", encoding="utf8")
-        df = json.load(json_file)
-        return df
+def get_df(json_file):
+    """
+    Opens the provided JSON file and loads it into a dataframe.
 
-    def get_data (self, url):
-        """
-        Downloads, unzips, and loads the JSON file at the given URL.
+    Keyword arguments:
+    json_file -- string name of JSON file with data to be loaded
 
-        Keyword arguments:
-        url -- web location of the JSON file from which to download data
+    Returns:
+    (list) dataset as list of dictionaries
+    """
+    json_file = open(json_file, "r+", encoding="utf8")
+    df = json.load(json_file)
+    return df
+        
+def get_data(url):
+     """
+     Downloads, unzips, and loads the JSON file at the given URL.
 
-        Returns:
-        (list) dataset with JSON file data, list of dictionaries
-        """
-        return self.get_df(get_file(url))
+     Keyword arguments:
+     url -- web location of the JSON file from which to download data
 
-    def get_pleiades_objects (self, graph_data):
-        """
-        Goes through each JSON object in file and turns it into a PleiadesObject.
+     Returns:
+     (list) dataset with JSON file data, list of dictionaries
+     """
+     return get_df(get_file(url))
 
-        Keyword arguments:
-        graph_data -- list of graph_data from JSON file
+def get_pleiades_objects(graph_data):
+    """
+    Goes through each JSON object in file and turns it into a PleiadesObject.
 
-        Returns:
-        (list) list of PleiadesObjects
-        """
-        pleiads = []
-        for row in range(len(graph_data)):
-            pleiads.append(PleiadesObject(graph_data[row]))
-        return pleiads
+    Keyword arguments:
+    graph_data -- list of graph_data from JSON file
 
-    def get_pleiads (self, graph_data):
-        """
-        Goes through each JSON object in file and turns it into a Pleiad object.
+    Returns:
+    (list) list of PleiadesObjects
+    """
+    pleiads = []
+    for row in range(len(graph_data)):
+        pleiads.append(PleiadesObject(graph_data[row]))
+    return pleiads
 
-        Keyword arguments:
-        graph_data -- list of graph_data from JSON file
+def get_pleiads(graph_data):
+    """
+    Goes through each JSON object in file and turns it into a Pleiad object.
 
-        Returns:
-        (list) list of Pleiads
-        """
-        pleiads = []
-        for row in range(len(graph_data)):
-            pleiads.append(Pleiad(graph_data[row]))
-        return pleiads
+    Keyword arguments:
+    graph_data -- list of graph_data from JSON file
 
-    def get_Pleiades_data (self, url = "http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz", object_type='Pleiad'):
-        """
-        Acquires most recent Pleiades data dump and parses contents to Python objects.
+    Returns:
+    (list) list of Pleiads
+    """
+    pleiads = []
+    for row in range(len(graph_data)):
+        pleiads.append(Pleiad(graph_data[row]))
+    return pleiads
 
-        Keyword arguments:
-        url -- string name of url to download from (default: "http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz")
+def get_pleiades_data(url="http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz",
+                      object_type='Pleiad'):
+    """
+    Acquires most recent Pleiades data dump and parses contents to Python objects.
 
-        Returns:
-        (list) list of PleiadesObjects or Pleiad objects.
-        """
-        df = self.get_data("http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz")
-        graph_data = df['@graph'] #@graph is a list of dictionaries
-        if object_type == 'PleiadesObject':
-            pleiads = self.get_pleiades_objects(graph_data)
-        else:
-            pleiads = self.get_pleiads(graph_data)
-        return pleiads
+    Keyword arguments:
+    url -- string name of url to download from (default: "http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz")
+
+    Returns:
+    (list) list of PleiadesObjects or Pleiad objects.
+    """
+    df = get_data(url)
+    graph_data = df['@graph']  #@graph is a list of dictionaries
+    if object_type == 'PleiadesObject':
+        pleiads = get_pleiades_objects(graph_data)
+    else:
+        pleiads = get_pleiads(graph_data)
+    return pleiads
+
 
 ####################
 #Parse Pleiades JSON
@@ -205,13 +203,14 @@ class PleiadesObject:
     add_association_certainty (certainty, certainty_uri)
     add_location_type (self, location_type, location_type_uri)
     """
+
     #does not include contributers, editing history, references to external scholarship
     def __init__(self, graph_dict):
         #information
         self.time_periods = {}
-        self.confidence_metrics ={}
+        self.confidence_metrics = {}
         self.association_certainties = {}
-        self.location_types ={}
+        self.location_types = {}
         #features
         if graph_dict['features'] and graph_dict['features'][0]:
             if graph_dict['features'][0]['geometry']:
@@ -226,17 +225,18 @@ class PleiadesObject:
         if graph_dict['locations'] and graph_dict['locations'][0]:
             if graph_dict['locations'][0]['associationCertainty']:
                 self.locations_associationCertainty = graph_dict['locations'][0]['associationCertainty']
-                (self.add_association_certainty(self.locations_associationCertainty, 
+                (self.add_association_certainty(self.locations_associationCertainty,
                                                 graph_dict['locations'][0]['associationCertaintyURI']))
-            if graph_dict['locations'][0]['attestations']:  
+            if graph_dict['locations'][0]['attestations']:
                 self.locations_attestations = AttestationsContainer(graph_dict['locations'][0]['attestations'])
                 for attestation in range(len(graph_dict['locations'][0]['attestations'])):
-                    (self.add_time_period(graph_dict['locations'][0]['attestations'][attestation]['timePeriod'], 
+                    (self.add_time_period(graph_dict['locations'][0]['attestations'][attestation]['timePeriod'],
                                           graph_dict['locations'][0]['attestations'][attestation]['timePeriodURI']))
-                    (self.add_confidence_metric(graph_dict['locations'][0]['attestations'][attestation]['confidence'], 
-                                          graph_dict['locations'][0]['attestations'][attestation]['confidenceURI']))
+                    (self.add_confidence_metric(graph_dict['locations'][0]['attestations'][attestation]['confidence'],
+                                                graph_dict['locations'][0]['attestations'][attestation][
+                                                    'confidenceURI']))
             if graph_dict['locations'][0]['id']:
-                 self.locations_id = graph_dict['locations'][0]['id']
+                self.locations_id = graph_dict['locations'][0]['id']
             if graph_dict['locations'][0]['featureTypeURI'] and graph_dict['locations'][0]['featureTypeURI'][0]:
                 self.locations_featureTypeURI = graph_dict['locations'][0]['featureTypeURI'][0]
                 self.add_location_type(graph_dict['locations'][0]['featureType'][0], self.locations_featureTypeURI)
@@ -266,27 +266,27 @@ class PleiadesObject:
         if graph_dict['connections'] and graph_dict['connections'][0]:
             self.connections = {}
             for item in graph_dict['connections']:
-                connections[item['id']] = item['connectionType']
+                self.connections[item['id']] = item['connectionType']
         if graph_dict['names'] and graph_dict['names'][0]:
             self.names = NamesContainer(graph_dict['names'])
         if graph_dict['id']:
-             self.id = graph_dict['id'] 
+            self.id = graph_dict['id']
         if graph_dict['subject'] and graph_dict['subject'][0]:
             self.subjects = []
             for subject in graph_dict['subject']:
                 self.subjects.append(subject)
         if graph_dict['title']:
-             self.title = graph_dict['title'] 
+            self.title = graph_dict['title']
         if graph_dict['provenance']:
-             self.provenance = graph_dict['provenance'] 
+            self.provenance = graph_dict['provenance']
         if graph_dict['details']:
-             self.details = graph_dict['details'] 
+            self.details = graph_dict['details']
         if graph_dict['type']:
-             self.type = graph_dict['type'] 
+            self.type = graph_dict['type']
         if graph_dict['uri']:
-             self.uri = graph_dict['uri'] 
+            self.uri = graph_dict['uri']
         if graph_dict['description']:
-             self.description = graph_dict['description'] 
+            self.description = graph_dict['description']
         if graph_dict['placeTypes'] and graph_dict['placeTypes'][0]:
             self.place_types = []
             for place_type in graph_dict['placeTypes']:
@@ -296,7 +296,7 @@ class PleiadesObject:
         if graph_dict['reprPoint'] and graph_dict['reprPoint'][0]:
             self.repr_point = graph_dict['reprPoint']
 
-    def add_time_period (self, time_period, time_period_uri):
+    def add_time_period(self, time_period, time_period_uri):
         """
         Adds info about a time period to appropriate dictionary.
         
@@ -307,7 +307,7 @@ class PleiadesObject:
         if time_period not in self.time_periods.keys():
             self.time_periods[time_period] = time_period_uri
 
-    def add_confidence_metric (self, confidence_metric, confidence_metric_uri):
+    def add_confidence_metric(self, confidence_metric, confidence_metric_uri):
         """
         Adds info about a confidence metric to appropriate dictionary.
         
@@ -318,7 +318,7 @@ class PleiadesObject:
         if confidence_metric not in self.confidence_metrics.keys():
             self.confidence_metrics[confidence_metric] = confidence_metric_uri
 
-    def add_association_certainty (self, certainty, certainty_uri):
+    def add_association_certainty(self, certainty, certainty_uri):
         """
         Adds info about an association certainty to appropriate dictionary.
         
@@ -327,9 +327,9 @@ class PleiadesObject:
         certainty_uri -- Pleiades uri for that association certainty
         """
         if certainty not in self.association_certainties.keys():
-            self.association_certainties[certainty] = certainty_uri   
+            self.association_certainties[certainty] = certainty_uri
 
-    def add_location_type (self, location_type, location_type_uri):
+    def add_location_type(self, location_type, location_type_uri):
         """
         Adds info about a location type to appropriate dictionary.
         
@@ -338,7 +338,8 @@ class PleiadesObject:
         location_type_uri -- Pleiades uri for that location type
         """
         if location_type not in self.location_types.keys():
-            self.location_types[location_type] = location_type_uri   
+            self.location_types[location_type] = location_type_uri
+
 
 class Pleiad:
     """
@@ -380,6 +381,7 @@ class Pleiad:
     repr_point : list
         Representative long/lat point
     """
+
     def __init__(self, graph_dict):
         #features
         if graph_dict['features'] and graph_dict['features'][0]:
@@ -389,7 +391,7 @@ class Pleiad:
                 self.text_id = graph_dict['features'][0]['id']
         #locations
         if graph_dict['locations'] and graph_dict['locations'][0]:
-            if graph_dict['locations'][0]['attestations']:  
+            if graph_dict['locations'][0]['attestations']:
                 self.attestations = AttestationsContainer(graph_dict['locations'][0]['attestations'])
             if graph_dict['locations'][0]['start']:
                 self.start_date = graph_dict['locations'][0]['start']
@@ -401,25 +403,25 @@ class Pleiad:
         if graph_dict['connections'] and graph_dict['connections'][0]:
             self.connections = {}
             for item in graph_dict['connections']:
-                connections[item['id']] = item['connectionType']
+                self.connections[item['id']] = item['connectionType']
         #names
         if graph_dict['names'] and graph_dict['names'][0]:
             self.names = NamesContainer(graph_dict['names'])
         #general
         if graph_dict['id']:
-             self.id = graph_dict['id'] 
+            self.id = graph_dict['id']
         if graph_dict['subject'] and graph_dict['subject'][0]:
             self.subjects = []
             for subject in graph_dict['subject']:
                 self.subjects.append(subject)
         if graph_dict['title']:
-             self.title = graph_dict['title'] 
+            self.title = graph_dict['title']
         if graph_dict['details']:
-             self.details = graph_dict['details'] 
+            self.details = graph_dict['details']
         if graph_dict['uri']:
-             self.uri = graph_dict['uri'] 
+            self.uri = graph_dict['uri']
         if graph_dict['description']:
-             self.description = graph_dict['description'] 
+            self.description = graph_dict['description']
         if graph_dict['placeTypes'] and graph_dict['placeTypes'][0]:
             self.place_types = []
             for place_type in graph_dict['placeTypes']:
@@ -428,8 +430,8 @@ class Pleiad:
             self.bbox = BboxContainer(graph_dict['bbox'])
         if graph_dict['reprPoint'] and graph_dict['reprPoint'][0]:
             self.repr_point = graph_dict['reprPoint']
-    
-    
+
+
 class BboxContainer:
     """
     A class to parse and organize bbox data.
@@ -444,11 +446,13 @@ class BboxContainer:
     max_latitude : string
         Maximum latitude of a location
     """
+
     def __init__(self, coordinates):
         self.min_longitude = coordinates[0]
         self.min_latitude = coordinates[1]
         self.max_longitude = coordinates[2]
         self.max_latitude = coordinates[3]
+
 
 class GeometryContainer:
     """
@@ -460,9 +464,11 @@ class GeometryContainer:
     coordinates : list
         two item list of latitude, longitude
     """
+
     def __init__(self, geometry_dict):
         self.geom_type = geometry_dict['type']
         self.coordinates = geometry_dict['coordinates']
+
 
 class PropertiesContainer:
     """
@@ -480,12 +486,14 @@ class PropertiesContainer:
     title : string
         formal title of location
     """
+
     def __init__(self, properties_dict):
         self.snippet = properties_dict['snippet']
         self.link = properties_dict['link']
         self.description = properties_dict['description']
         self.location_precision = properties_dict['location_precision']
         self.title = properties_dict['title']
+
 
 class AttestationsContainer:
     """
@@ -495,10 +503,12 @@ class AttestationsContainer:
     attestations : dictionary
         dictionary of timePeriods (keys) and confidences (values)
     """
+
     def __init__(self, attestations_list):
         self.attestations = {}
         for attestations_dict in attestations_list:
             self.attestations[attestations_dict['timePeriod']] = attestations_dict['confidence']
+
 
 class NamesContainer:
     """
@@ -509,10 +519,12 @@ class NamesContainer:
         list of Name objects
     
     """
+
     def __init__(self, names_list):
         self.names = []
         for name in range(len(names_list)):
             self.names.append(Name(names_list[name]))
+
 
 class Name:
     """
@@ -544,6 +556,7 @@ class Name:
     name_attested : string
         Attested spelling of ancient name, not necessarily the same as the "title"
     """
+
     def __init__(self, attributes):
         self.name_type = attributes['nameType']
         self.transcription_accuracy = attributes['transcriptionAccuracy']
