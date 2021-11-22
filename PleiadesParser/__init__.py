@@ -1,8 +1,1 @@
-from PleiadesParser.parse_pleiades import PleiadesGetter
-from PleiadesParser.parse_pleiades import PleiadesObject
-from PleiadesParser.parse_pleiades import Pleiad
-from PleiadesParser.parse_pleiades import BboxContainer
-from PleiadesParser.parse_pleiades import GeometryContainer
-from PleiadesParser.parse_pleiades import AttestationsContainer
-from PleiadesParser.parse_pleiades import NamesContainer
-from PleiadesParser.parse_pleiades import Name
+
