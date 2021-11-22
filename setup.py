@@ -12,7 +12,6 @@ setup(
   keywords = ['Pleiades', 'JSON', 'Stoa'],
   install_requires=[ 
           'wget',
-          'json',
           'gzip',
           'shutil',
           'os'
