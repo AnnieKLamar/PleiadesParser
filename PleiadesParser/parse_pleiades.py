@@ -53,7 +53,7 @@ class PleiadesGetter:
     def __init__(self):
         pass
 
-    def wget_url (url):
+    def wget_url (self, url):
         """
         Downloads the file at the given URL and returns the file name.
 
@@ -66,7 +66,7 @@ class PleiadesGetter:
         wget.download(url, url.split("/")[-1])
         return url.split("/")[-1]
 
-    def unzip_gz (file):
+    def unzip_gz (self, file):
         """
         Unzips the provided .gz file and returns the unzipped file.
 
@@ -83,7 +83,7 @@ class PleiadesGetter:
         f_in.close(); os.remove(file)
         f_out.close(); return file[:-3]
 
-    def get_file (url):
+    def get_file (self, url):
         """
         Downloads, unzips, and returns the file at the given URL.
 
@@ -98,7 +98,7 @@ class PleiadesGetter:
             file = unzip_gz(file)
         return file
 
-    def get_df (json_file):
+    def get_df (self, json_file):
         """
         Opens the provided JSON file and loads it into a dataframe.
 
@@ -112,7 +112,7 @@ class PleiadesGetter:
         df = json.load(json_file)
         return df
 
-    def get_data (url):
+    def get_data (self, url):
         """
         Downloads, unzips, and loads the JSON file at the given URL.
 
@@ -124,7 +124,7 @@ class PleiadesGetter:
         """
         return get_df(get_file(url))
 
-    def get_pleiades_objects (graph_data):
+    def get_pleiades_objects (self, graph_data):
         """
         Goes through each JSON object in file and turns it into a PleiadesObject.
 
@@ -139,7 +139,7 @@ class PleiadesGetter:
             pleiads.append(PleiadesObject(graph_data[row]))
         return pleiads
 
-    def get_pleiads (graph_data):
+    def get_pleiads (self, graph_data):
         """
         Goes through each JSON object in file and turns it into a Pleiad object.
 
@@ -154,7 +154,7 @@ class PleiadesGetter:
             pleiads.append(Pleiad(graph_data[row]))
         return pleiads
 
-    def get_Pleiades_data (url = "http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz", object_type='Pleiad'):
+    def get_Pleiades_data (self, url = "http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz", object_type='Pleiad'):
         """
         Acquires most recent Pleiades data dump and parses contents to Python objects.
 
