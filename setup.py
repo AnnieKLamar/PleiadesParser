@@ -8,7 +8,7 @@ setup(
   author = 'Annie K. Lamar',
   author_email = 'kalamar@stanford.edu',
   url = 'https://github.com/AnnieKLamar/PleiadesParser',
-  download_url = 'https://github.com/AnnieKLamar/PleiadesParser/archive/refs/tags/v1.0.tar.gz',
+  download_url = 'https://github.com/AnnieKLamar/PleiadesParser/archive/refs/tags/v2.0.tar.gz',
   keywords = ['Pleiades', 'JSON', 'Stoa'],
   install_requires=[ 
           'wget',
