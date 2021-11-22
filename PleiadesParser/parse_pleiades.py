@@ -93,9 +93,9 @@ class PleiadesGetter:
         Returns:
         (string) file name
         """
-        file = wget_url(url)
+        file = self.wget_url(url)
         if file.endswith(".gz"):
-            file = unzip_gz(file)
+            file = self.unzip_gz(file)
         return file
 
     def get_df (self, json_file):
@@ -122,7 +122,7 @@ class PleiadesGetter:
         Returns:
         (list) dataset with JSON file data, list of dictionaries
         """
-        return get_df(get_file(url))
+        return self.get_df(get_file(url))
 
     def get_pleiades_objects (self, graph_data):
         """
@@ -164,12 +164,12 @@ class PleiadesGetter:
         Returns:
         (list) list of PleiadesObjects or Pleiad objects.
         """
-        df = get_data("http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz")
+        df = self.get_data("http://atlantides.org/downloads/pleiades/json/pleiades-places-latest.json.gz")
         graph_data = df['@graph'] #@graph is a list of dictionaries
         if object_type == 'PleiadesObject':
-            pleiads = get_pleiades_objects(graph_data)
+            pleiads = self.get_pleiades_objects(graph_data)
         else:
-            pleiads = get_pleiads(graph_data)
+            pleiads = self.get_pleiads(graph_data)
         return pleiads
 
 ####################
